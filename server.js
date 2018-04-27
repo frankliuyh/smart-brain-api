@@ -3,6 +3,15 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const app = express();
+const knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host : 'localhost',
+    user : 'ubuntu',
+    password : 'password',
+    database : 'smart-brain'
+  }
+});
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -49,15 +58,13 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const {email, name, password} = req.body;
-    database.users.push({
-        id: '125',
-        name: name,
+    knex('users').returning('*').insert({
         email: email,
-        password: password,
-        entries: 0,
+        name: name,
         joined: new Date()
-    });
-    res.json(database.users[database.users.length - 1]);
+    }).then(user => {
+        res.json(user[0]);
+    }).catch(err => res.status(400).json('unable to register'));
 });
 
 app.get('/profile/:id', (req, res) => {
@@ -87,7 +94,7 @@ app.put('/image', (req, res) => {
     if(!found) {
         res.status(400).json('no such user');
     }
-})
+});
 
 app.listen(8081, () => {
     console.log("app is running on port 8081");
