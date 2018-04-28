@@ -31,7 +31,9 @@ app.post('/register', (req,res) => {register(req, res, knex, bcrypt)});
 
 app.get('/profile/:id', (req,res) => {profile(req, res, knex)});
 
-app.put('/image', (req,res) => {image(req, res, knex)});
+app.put('/image', (req,res) => {image.handleImage(req, res, knex)});
+
+app.post('/imageurl', (req,res) => {image.handleApiCall(req, res)});
 
 app.listen(8081, () => {
     console.log("app is running on port 8081");

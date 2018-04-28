@@ -1,5 +1,8 @@
 const register = (req, res, knex, bcrypt) => {
     const {email, name, password} = req.body;
+    if (!email || !name || !password) {
+        return res.status(400).json('wrong form submission');
+    }
     const hash = bcrypt.hashSync(password);
     knex.transaction(trx => {
         trx.insert({
