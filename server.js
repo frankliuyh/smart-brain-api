@@ -6,10 +6,8 @@ const app = express();
 const knex = require('knex')({
   client: 'pg',
   connection: {
-    host : 'localhost',
-    user : 'ubuntu',
-    password : 'password',
-    database : 'smart-brain'
+    connectionString : process.env.DATABASE_URL,
+    ssl: true
   }
 });
 
